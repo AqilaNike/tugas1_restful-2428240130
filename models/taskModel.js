@@ -1,9 +1,15 @@
 const mongoose = require('mongoose');
 
+// EMBEDDING: Sub-dokumen Catatan/Komentar Task
+const commentSchema = new mongoose.Schema({
+  teks: { type: String, required: true },
+  createdAt: { type: Date, default: Date.now }
+});
+
 const taskSchema = new mongoose.Schema({
   judul: { 
     type: String, 
-    required: [true, 'judul wajib diisi'], 
+    required: [true, 'Judul wajib diisi'], 
     trim: true 
   },
   deskripsi: { 
@@ -13,22 +19,27 @@ const taskSchema = new mongoose.Schema({
   },
   prioritas: { 
     type: String, 
-    required: [true, 'prioritas wajib diisi'], 
-    enum: ['rendah', 'sedang', 'tinggi'],
-    default: 'sedang'
+    enum: ['rendah', 'sedang', 'tinggi'], 
+    default: 'sedang' 
   },
   tenggat: { 
     type: Date, 
-    required: [true, 'tenggat wajib diisi'] 
+    required: [true, 'Tenggat wajib diisi'] 
   },
   selesai: { 
     type: Boolean, 
     default: false 
   },
-  createdAt: { 
-    type: Date, 
-    default: Date.now 
+
+  // REFERENCING: Menghubungkan Task ke Kategori
+  kategori: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Category',
+    required: [true, 'Kategori wajib diisi']
   },
-});
+
+  // EMBEDDING: Array catatan di dalam dokumen Task
+  catatan: [commentSchema]
+}, { timestamps: true });
 
 module.exports = mongoose.model('Task', taskSchema);

@@ -1,10 +1,8 @@
 const express = require('express');
 const router = express.Router();
-
-// IMPOOR CONTROLLER DI SINI
 const taskController = require('../controllers/taskController');
 
-// Pemetaan Rute
+// Pastikan kelima handler ini terdefinisi di controller
 router.get('/', taskController.getAll);
 router.get('/:id', taskController.getById);
 router.post('/', taskController.create);
